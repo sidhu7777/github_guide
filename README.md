@@ -53,7 +53,7 @@
 
 ---
 
-## **Scenarios with Explanations (1-60)**
+
 
 ### **Basic Operations**
 
@@ -261,7 +261,7 @@
     ```
     - **Explanation:** Restores the file to its state at the specified commit.
 
-### **Advanced Multi-Step Scenarios (31–60)**
+
 
 31. **Cherry-Pick a Commit from Another Branch**
     - **Scenario:** You need to copy a specific commit from one branch to another without merging the entire branch.
