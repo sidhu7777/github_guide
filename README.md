@@ -439,24 +439,22 @@
     ```
     - **Explanation:** Rewrite history to replace the old author information with the new one.
 
-56. # Resolve Diverged Branches with Rebasing
+56. **Resolve Diverged Branches with Rebasing**
     ```bash
     git fetch origin
     git rebase origin/main
     git push origin <branch-name> --force
     ```
-    - # Explanation:
-    -  Rebase your branch onto the updated `main` branch and force-push to reconcile the divergence.
+    - **Explanation:** Rebase your branch onto the updated `main` branch and force-push to reconcile the divergence.
 
-57. # Create and Apply a Custom Git Alias
+57. **Create and Apply a Custom Git Alias**
     ```bash
     git config --global alias.lg "log --oneline --graph --decorate --all"
     git lg
     ```
-    - # Explanation:
-    -  Create an alias for a long command (`git log --oneline --graph --decorate --all`) and use it.
+    - **Explanation:** Create an alias for a long command (`git log --oneline --graph --decorate --all`) and use it.
 
-58. # Migrate a Subdirectory to a New Repository
+58. **Migrate a Subdirectory to a New Repository**
     ```bash
     git subtree split --prefix=<folder-path> -b <new-branch-name>
     git clone <repository-url> <new-repository>
@@ -464,22 +462,19 @@
     git checkout <new-branch-name>
     git push origin main
     ```
-    - # Explanation:
-    - Use `git subtree split` to create a new branch with the folder’s history, clone the repo, and push the branch as a new repository.
+    - **Explanation:** Use `git subtree split` to create a new branch with the folder’s history, clone the repo, and push the branch as a new repository.
 
-59. # Resolve "Detached HEAD" State
+59. **Resolve "Detached HEAD" State**
     ```bash
     git checkout <commit-hash>
     git branch <new-branch-name>
     git checkout <new-branch-name>
     ```
-    - # Explanation:
-    - Create a branch from the commit and switch to it, returning to a "normal" state.
+    - **Explanation:** Create a branch from the commit and switch to it, returning to a "normal" state.
 
-60. # Revert a Merge Commit
+60. **Revert a Merge Commit**
     ```bash
     git log
     git revert -m 1 <merge-commit-hash>
     ```
-    - # Explanation:
-    -  Use `-m 1` to specify the parent branch to keep, creating a new commit that undoes the merge.
+    - **Explanation:** Use `-m 1` to specify the parent branch to keep, creating a new commit that undoes the merge.
