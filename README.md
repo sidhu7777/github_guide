@@ -213,19 +213,22 @@ ________________________________________
 ________________________________________
 # 53. Remove Sensitive Information from a Repository
 •	Scenario: You committed sensitive data (e.g., passwords) and need to completely remove it from history.
-•	git filter-branch --force --index-filter \
-•	  "git rm --cached --ignore-unmatch <sensitive-file>" \
-•	  --prune-empty --tag-name-filter cat -- --all
-•	git push origin --force --all
-•	git push origin --force --tags
+
+•	```bash 
+          git filter-branch --force --index-filter \
+	  "git rm --cached --ignore-unmatch <sensitive-file>" \
+	  --prune-empty --tag-name-filter cat -- --all
+	  git push origin --force --all
+	  git push origin --force --tags
 # Explanation: Use git filter-branch to rewrite history, remove the sensitive file, and force-push the updated repository.
 
 # 54. Recover a Deleted File from a Specific Commit
 •	Scenario: A file was deleted, and you want to restore it from a past commit.
-•	git log -- <file>
-•	git checkout <commit-hash> -- <file>
-•	git add <file>
-•	git commit -m "Restore <file> from commit <commit-hash>"
+ ```bash
+        git log -- <file>
+	git checkout <commit-hash> -- <file>
+	git add <file>
+	git commit -m "Restore <file> from commit <commit-hash>"
 # Explanation: Find the commit where the file existed, restore it using checkout, and commit the restored file.
 
 # 55. Rewrite the Author of All Commits
