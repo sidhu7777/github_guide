@@ -1,0 +1,164 @@
+## Project Overview
+The **Job Insight Tracker** is a project designed to scrape, process, and analyze job market data. It leverages tools like NLP, visualization, and advanced data management techniques. Large datasets are handled using **DVC (Data Version Control)** for efficient versioning and storage.
+
+---
+
+## Handling Large Files in Git: Challenges and Solutions
+
+### **Scenario**
+During development, a large data file (`data/raw/job_descriptions.csv`, ~1.6 GB) was accidentally committed to Git. This caused:
+- Slow push operations and large repository size.
+- Push failures due to GitHub's repository size limitations.
+
+We resolved these issues by:
+1. Moving the large file to **DVC**.
+2. Cleaning up Git's history using **BFG Repo-Cleaner** to remove the large file.
+
+---
+
+## **Solutions**
+
+### **1. Managing Large Files with DVC**
+
+#### **What is DVC?**
+[DVC (Data Version Control)](https://dvc.org/) is a tool designed to handle large files, datasets, and machine learning models outside Git. It uses `.dvc` pointer files to track large files and stores the actual data in a remote or local storage.
+
+#### **Steps to Manage Large Files with DVC**
+1. **Initialize DVC in the Repository**:
+   ```bash
+   pip install dvc
+   dvc init
+   ```
+
+2. **Add the Large File to DVC**:
+   ```bash
+   dvc add data/raw/job_descriptions.csv
+   ```
+
+3. **Push the File to DVC Storage**:
+   - **Initial Attempt**: Google Drive as DVC Remote
+     ```bash
+     dvc remote add -d gdrive_remote gdrive://<FOLDER_ID>
+     dvc push
+     ```
+     **Issue**: Google Drive API limitations caused failures during setup.
+
+   - **Final Solution**: Local Storage Path as DVC Remote
+     ```bash
+     dvc remote add -d local_remote C:\Users\91832\Desktop\Job_insight_tracker\DVC_Raw_data
+     dvc push
+     ```
+
+4. **Commit the DVC Pointer File**:
+   ```bash
+   git add data/raw/job_descriptions.csv.dvc
+   git commit -m "Track job_descriptions.csv with DVC"
+   ```
+
+5. **Push Changes to GitHub**:
+   ```bash
+   git push
+   ```
+
+---
+
+### **2. Removing Large Files from Git’s History**
+
+#### **Why Clean Git History?**
+Even after moving the file to DVC, the large file (`data/raw/job_descriptions.csv`) remained in Git's history. This inflated the repository size and caused push failures. Cleaning the history ensured:
+- Smaller repository size.
+- Successful pushes to GitHub.
+
+#### **Steps to Remove Large Files Using BFG Repo-Cleaner**
+1. **Download BFG Repo-Cleaner**:
+   - Visit [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/) and download the JAR file (e.g., `bfg-1.14.0.jar`).
+
+2. **Run BFG to Delete the File**:
+   ```bash
+   java -jar bfg-1.14.0.jar --delete-files "job_descriptions.csv" .
+   ```
+
+3. **Clean Git Metadata**:
+   ```bash
+   git reflog expire --expire=now --all
+   git gc --prune=now --aggressive
+   ```
+
+4. **Force Push the Cleaned Repository**:
+   ```bash
+   git push --force
+   ```
+
+---
+
+### **3. Verifying the Workflow**
+
+#### **Step 1: Check Git History**
+Ensure the large file has been removed from Git's history:
+```bash
+git rev-list --objects --all | findstr "job_descriptions.csv"
+```
+**Expected Output**: Only `data/raw/job_descriptions.csv.dvc` should remain.
+
+#### **Step 2: Check Repository Size**
+Verify that the repository size is reduced:
+```bash
+git count-objects -vH
+```
+
+#### **Step 3: Verify DVC Workflow**
+Pull the data using DVC to ensure it is still accessible:
+```bash
+dvc pull
+```
+
+#### **Step 4: Confirm on GitHub**
+Check the repository on GitHub:
+- Confirm the large file `job_descriptions.csv` is no longer in the repository.
+- Verify that only the `.dvc` pointer file is present.
+
+
+
+## Lessons Learned
+1. **Use DVC or Git LFS**: Avoid committing large files to Git directly. Tools like DVC or Git LFS are designed for handling large datasets.
+2. **Choose Reliable Storage**: Cloud storage like Google Drive can face API issues. Local storage paths are a reliable alternative.
+3. **Clean Git History**: Once a large file is committed, tools like **BFG Repo-Cleaner** or `git filter-repo` are essential for cleaning the history.
+4. **Verify After Changes**: Always verify repository size, history, and functionality after resolving large file issues.
+
+---
+
+## Data Management with DVC
+
+### **Pulling Data**
+To set up the project and pull required data:
+1. Install DVC:
+   ```bash
+   pip install dvc
+   ```
+
+2. Pull the data:
+   ```bash
+   dvc pull
+   ```
+
+Ensure the local DVC remote (`DVC_Raw_data`) is properly configured.
+
+---
+
+## Future Improvements
+1. **Scalable Storage**: Explore scalable cloud storage solutions like AWS S3, Azure Blob Storage, or Google Cloud Storage for DVC remotes.
+2. **Automate Workflows**: Automate large file management workflows to minimize manual intervention.
+3. **Pre-Commit Hooks**: Implement Git pre-commit hooks to prevent large files from being accidentally added to Git.
+
+---
+
+## References
+- [DVC Documentation](https://dvc.org/doc)
+- [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/)
+- [Git LFS](https://git-lfs.github.com/)
+
+---
+
+This `README.md` ensures all steps, solutions, and lessons are captured in a consistent format for future reference.
+``` 
+
